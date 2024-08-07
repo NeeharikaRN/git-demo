@@ -1,4 +1,6 @@
-name: dockerloginDEVQA
+# This is a basic workflow to help you get started with Actions
+
+name: CI
 
 # Controls when the workflow will run
 on:
@@ -7,27 +9,31 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch:
+
 jobs:
-  LogintodockerhubDEV:
+  lint:
     runs-on: ubuntu-latest
-    environment: dev
     steps:
-    - uses: actions/checkout@v3
-    - name: docker login
-      uses: docker/login-action@v2.1.0
-      with:
-       registry: registry-1.docker.io
-       username: ${{secrets.DOCKERHUBUSERNAME}}
-       password: ${{secrets.DOCKERHUBPASSWORD}}
-  LogintodockerhubQA:
+      - uses: actions/checkout@v2
+      - run: echo "Hello world"
+  test:
     runs-on: ubuntu-latest
-    environment: QA
     steps:
-    - uses: actions/checkout@v3
-    - name: docker login
-      uses: docker/login-action@v2.1.0
-      with:
-       registry: registry-1.docker.io
-       username: ${{secrets.DOCKERHUBUSERNAME}}
-       password: ${{secrets.DOCKERHUBPASSWORD}}
+      - uses: actions/checkout@v2
+      - run: echo "Hello world"
+  publish:
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - test
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "Hello world"
+  test1:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest ]
+    runs-on: $
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "hello Test"
