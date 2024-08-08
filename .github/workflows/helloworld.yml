@@ -8,6 +8,9 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
+env:
+  AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: neeha-ecr-demo 
 jobs:
   LogintodockerhubDEV:
     runs-on: ubuntu-latest
@@ -19,12 +22,21 @@ jobs:
       with:
        username: ${{secrets.DOCKERHUBUSERNAME}}
        password: ${{secrets.DOCKER_HUB_TOKEN}}
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
     - name: Docker Pull
-      run: docker pull nginx
+      run: docker pull neeharikarn9/petclinic-app
     - name: Docker Tag
-      run: docker tag nginx neeharikarn9/nginx:v1
+      run: docker tag neeharikarn9/petclinic-app 761694193135.dkr.ecr.us-east-1.amazonaws.com/neeha-ecr-demo
     - name: Docker Push
-      run: docker push neeharikarn9/nginx:v1
+      run: docker push 761694193135.dkr.ecr.us-east-1.amazonaws.com/neeha-ecr-demo
   LogintodockerhubQA:
     runs-on: ubuntu-latest
     environment: QA
