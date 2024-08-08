@@ -22,9 +22,9 @@ jobs:
     - name: Docker Pull
       run: docker pull nginx
     - name: Docker Tag
-      run: docker tag nginx neeharikarn9/nginx
+      run: docker tag nginx neeharikarn9/nginx:v1
     - name: Docker Push
-      run: docker push neeharikarn9/nginx
+      run: docker push neeharikarn9/nginx:v1
   LogintodockerhubQA:
     runs-on: ubuntu-latest
     environment: QA
